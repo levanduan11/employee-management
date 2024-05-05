@@ -1,0 +1,17 @@
+PORT: 8080
+DB_HOST: localhost
+DB_PORT: 5432
+DB_NAME: boot
+DB_USERNAME: postgres
+DB_PASSWORD: 123
+DB_SCHEMA: employee
+RSA_PRIVATE_KEY: classpath:keys/private.pem
+RSA_PUBLIC_KEY: classpath:keys/public.pem
+TOKEN_EXPIRATION: 1800000
+REMEMBER_ME_TOKEN_EXPIRATION: 604800000
+ISSUER: employee_app
+
+MAIL_HOST: smtp.gmail.com
+MAIL_PORT: 587
+MAIL_USERNAME: lvduan1972@gmail.com
+MAIL_PASSWORD: znqa oipx tqfd vkil
