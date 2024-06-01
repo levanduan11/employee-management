@@ -9,7 +9,8 @@ import java.security.interfaces.RSAPublicKey;
 public record AppProperties(
         String ui_url,
         RSAProperties rsa,
-        JwtTokenProperties jwt
+        JwtTokenProperties jwt,
+        S3 s3
 ) {
     public record RSAProperties(
             RSAPrivateKey privateKey,
@@ -20,5 +21,14 @@ public record AppProperties(
             long expiration,
             long rememberMeTokenExpiration,
             String issuer) {
+    }
+
+    public record S3(
+            String accessKey,
+            String secretKey,
+            String bucket,
+            String region
+    ) {
+
     }
 }

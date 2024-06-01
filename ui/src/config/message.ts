@@ -8,6 +8,9 @@ export const API_ERROR_MESSAGE = {
   LOGIN_SUCCESS: 'Login successful',
   LOGOUT_SUCCESS: 'Logout successful',
   LOGOUT_FAIL: 'Logout failed, an error occurred',
+  UPDATE_PROFILE_PENDING: 'Updating profile...',
+  UPDATE_PROFILE_SUCCESS: 'Profile updated successfully',
+  UPDATE_PROFILE_FAIL: 'Profile update failed',
 };
 
 export const {
@@ -20,4 +23,7 @@ export const {
   LOGIN_SUCCESS,
   LOGOUT_SUCCESS,
   LOGOUT_FAIL,
+  UPDATE_PROFILE_PENDING,
+  UPDATE_PROFILE_SUCCESS,
+  UPDATE_PROFILE_FAIL,
 } = API_ERROR_MESSAGE;

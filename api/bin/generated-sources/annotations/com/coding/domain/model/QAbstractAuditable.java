@@ -13,7 +13,7 @@ import com.querydsl.core.types.Path;
  * QAbstractAuditable is a Querydsl query type for AbstractAuditable
  */
 @Generated("com.querydsl.codegen.DefaultSupertypeSerializer")
-public class QAbstractAuditable extends EntityPathBase<AbstractAuditable<?, ? extends java.io.Serializable>> {
+public class QAbstractAuditable extends EntityPathBase<AbstractAuditable<? extends java.io.Serializable>> {
 
     private static final long serialVersionUID = 591774523L;
 
@@ -21,16 +21,16 @@ public class QAbstractAuditable extends EntityPathBase<AbstractAuditable<?, ? ex
 
     public final QAbstractPersistable _super = new QAbstractPersistable(this);
 
-    public final SimplePath<Object> createdBy = createSimple("createdBy", Object.class);
+    public final NumberPath<Long> createdBy = createNumber("createdBy", Long.class);
 
-    public final DateTimePath<java.util.Date> createdDate = createDateTime("createdDate", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> createdDate = createDateTime("createdDate", java.time.LocalDateTime.class);
 
     //inherited
     public final SimplePath<java.io.Serializable> id = _super.id;
 
-    public final SimplePath<Object> lastModifiedBy = createSimple("lastModifiedBy", Object.class);
+    public final NumberPath<Long> lastModifiedBy = createNumber("lastModifiedBy", Long.class);
 
-    public final DateTimePath<java.util.Date> lastModifiedDate = createDateTime("lastModifiedDate", java.util.Date.class);
+    public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = createDateTime("lastModifiedDate", java.time.LocalDateTime.class);
 
     //inherited
     public final BooleanPath new$ = _super.new$;

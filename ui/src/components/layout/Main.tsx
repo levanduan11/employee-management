@@ -6,7 +6,7 @@ type Props = {
 };
 
 const Main: FC<Props> = ({ className, children }) => {
-  return <div className={`${className} p-3 ml-[230px]`}>{children}</div>;
+  return <div className={`${className} p-3 md:ml-[230px]`}>{children}</div>;
 };
 
 export default Main;

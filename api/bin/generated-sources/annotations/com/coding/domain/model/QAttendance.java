@@ -24,10 +24,11 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     public final QAbstractAuditable _super = new QAbstractAuditable(this);
 
-    public final QUser createdBy;
+    //inherited
+    public final NumberPath<Long> createdBy = _super.createdBy;
 
     //inherited
-    public final DateTimePath<java.util.Date> createdDate = _super.createdDate;
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
     public final DatePath<java.time.LocalDate> date = createDate("date", java.time.LocalDate.class);
 
@@ -35,10 +36,11 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QUser lastModifiedBy;
+    //inherited
+    public final NumberPath<Long> lastModifiedBy = _super.lastModifiedBy;
 
     //inherited
-    public final DateTimePath<java.util.Date> lastModifiedDate = _super.lastModifiedDate;
+    public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = _super.lastModifiedDate;
 
     public final StringPath location = createString("location");
 
@@ -73,9 +75,7 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     public QAttendance(Class<? extends Attendance> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.createdBy = inits.isInitialized("createdBy") ? new QUser(forProperty("createdBy"), inits.get("createdBy")) : null;
         this.employee = inits.isInitialized("employee") ? new QEmployee(forProperty("employee"), inits.get("employee")) : null;
-        this.lastModifiedBy = inits.isInitialized("lastModifiedBy") ? new QUser(forProperty("lastModifiedBy"), inits.get("lastModifiedBy")) : null;
     }
 
 }

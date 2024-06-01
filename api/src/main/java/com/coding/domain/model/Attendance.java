@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "attendances")
-public class Attendance extends AbstractAuditable<User, Long> {
+public class Attendance extends AbstractAuditable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -13,6 +13,11 @@ import {
   ERROR_404,
   ERROR_500,
 } from '@/config';
+import Cookie from 'js-cookie';
+import { ACCESS_TOKEN } from '@/constants';
+import { navigate } from '@/server';
+import { routes } from '@/routes';
+import authService from './auth.service';
 class HttpClient {
   public instance(config?: CreateAxiosDefaults): AxiosInstance {
     const url = process.env.NEXT_PUBLIC_API_URL;
@@ -34,6 +39,16 @@ class HttpClient {
       },
       (error) => this.handleApiError(error),
     );
+    const accessToken = Cookie.get(ACCESS_TOKEN);
+    instance.interceptors.request.use(
+      (config) => {
+        if (accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error),
+    );
     return instance;
   }
   private handleApiError(error: unknown) {
@@ -49,9 +64,15 @@ class HttpClient {
         case 400:
           message = messageServer ?? ERROR_400;
           break;
-        case 401:
+        case 401: {
+          authService.cleanCookieStorage();
           message = messageServer ?? ERROR_401;
+          const url = error.config?.url;
+          if (url && !url.includes('api/v1/auth')) {
+            navigate(routes.login);
+          }
           break;
+        }
         case 403:
           message = messageServer ?? ERROR_403;
           break;

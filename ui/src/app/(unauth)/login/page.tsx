@@ -53,7 +53,7 @@ const Login = () => {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="username" {...field} />
+                    <Input className='form-input' placeholder="username" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

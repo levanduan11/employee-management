@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "departments")
-public class Department extends AbstractAuditable<User, Long> {
+public class Department extends AbstractAuditable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

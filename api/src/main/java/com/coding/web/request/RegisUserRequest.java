@@ -9,9 +9,13 @@ import java.util.Set;
 public record RegisUserRequest(
         @FieldRequired(fieldName = "username")
         String username,
-        @FieldRequired
+        @FieldRequired(fieldName = "email")
         @Email
         String email,
+        @FieldRequired(fieldName = "First Name")
+        String firstName,
+        @FieldRequired(fieldName = "Last Name")
+        String lastName,
         @Size(min = 1)
         Set<String> roles
 ) {

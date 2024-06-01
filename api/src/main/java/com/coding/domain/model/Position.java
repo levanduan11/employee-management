@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "positions")
-public class Position extends AbstractAuditable<User, Long> {
+public class Position extends AbstractAuditable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

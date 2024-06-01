@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +20,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static com.coding.core.constant.MessageKeyConstant.*;
+import static java.util.stream.Collectors.*;
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
@@ -72,23 +74,34 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<Object> handleUserNotActivatedException(DisabledException ex) {
+        return ResponseEntity
+                .status(UNAUTHORIZED)
+                .body(ApiResponse.builder()
+                        .message(messageSource.getMessage(ERROR_DISABLED, null, Locale.getDefault()))
+                        .httpStatusCode(UNAUTHORIZED)
+                        .build());
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
             HttpHeaders headers,
             HttpStatusCode status,
             WebRequest request) {
-        final var errors = ex.getBindingResult().getFieldErrors().stream()
-                .collect(Collectors.groupingBy(
+        final var errors = ex
+                .getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(groupingBy(
                         FieldError::getField,
-                        Collectors.mapping(DefaultMessageSourceResolvable::getDefaultMessage, Collectors.toList())
+                        mapping(DefaultMessageSourceResolvable::getDefaultMessage, toList())
                 ));
 
         return ResponseEntity
                 .status(BAD_REQUEST)
                 .headers(headers)
                 .body(ApiResponse.builder().httpStatusCode(status).error(errors).build());
-
-
     }
 }

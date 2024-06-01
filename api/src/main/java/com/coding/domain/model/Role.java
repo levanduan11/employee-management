@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "roles")
-public class Role extends AbstractAuditable<User, Long> {
+public class Role extends AbstractAuditable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

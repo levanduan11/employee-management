@@ -1,2 +1,3 @@
-import LoadingSkeleton from "./LoadingSkeleton";
-export { LoadingSkeleton };
+import LoadingSkeleton from './LoadingSkeleton';
+import Photo from './Photo';
+export { LoadingSkeleton, Photo };

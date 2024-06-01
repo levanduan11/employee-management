@@ -18,16 +18,15 @@ public class QProject extends EntityPathBase<Project> {
 
     private static final long serialVersionUID = 284022433L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QProject project = new QProject("project");
 
     public final QAbstractAuditable _super = new QAbstractAuditable(this);
 
-    public final QUser createdBy;
+    //inherited
+    public final NumberPath<Long> createdBy = _super.createdBy;
 
     //inherited
-    public final DateTimePath<java.util.Date> createdDate = _super.createdDate;
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
     public final SetPath<Department, QDepartment> departments = this.<Department, QDepartment>createSet("departments", Department.class, QDepartment.class, PathInits.DIRECT2);
 
@@ -39,10 +38,11 @@ public class QProject extends EntityPathBase<Project> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QUser lastModifiedBy;
+    //inherited
+    public final NumberPath<Long> lastModifiedBy = _super.lastModifiedBy;
 
     //inherited
-    public final DateTimePath<java.util.Date> lastModifiedDate = _super.lastModifiedDate;
+    public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = _super.lastModifiedDate;
 
     public final StringPath name = createString("name");
 
@@ -52,25 +52,15 @@ public class QProject extends EntityPathBase<Project> {
     public final DatePath<java.time.LocalDate> startDate = createDate("startDate", java.time.LocalDate.class);
 
     public QProject(String variable) {
-        this(Project.class, forVariable(variable), INITS);
+        super(Project.class, forVariable(variable));
     }
 
     public QProject(Path<? extends Project> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QProject(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QProject(PathMetadata metadata, PathInits inits) {
-        this(Project.class, metadata, inits);
-    }
-
-    public QProject(Class<? extends Project> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.createdBy = inits.isInitialized("createdBy") ? new QUser(forProperty("createdBy"), inits.get("createdBy")) : null;
-        this.lastModifiedBy = inits.isInitialized("lastModifiedBy") ? new QUser(forProperty("lastModifiedBy"), inits.get("lastModifiedBy")) : null;
+        super(Project.class, metadata);
     }
 
 }

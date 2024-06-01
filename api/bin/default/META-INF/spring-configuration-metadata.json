@@ -16,6 +16,12 @@
       "type": "com.coding.config.AppProperties$RSAProperties",
       "sourceType": "com.coding.config.AppProperties",
       "sourceMethod": "public com.coding.config.AppProperties.RSAProperties rsa() "
+    },
+    {
+      "name": "app.s3",
+      "type": "com.coding.config.AppProperties$S3",
+      "sourceType": "com.coding.config.AppProperties",
+      "sourceMethod": "public com.coding.config.AppProperties.S3 s3() "
     }
   ],
   "properties": [
@@ -45,6 +51,26 @@
       "name": "app.rsa.public-key",
       "type": "java.security.interfaces.RSAPublicKey",
       "sourceType": "com.coding.config.AppProperties$RSAProperties"
+    },
+    {
+      "name": "app.s3.access-key",
+      "type": "java.lang.String",
+      "sourceType": "com.coding.config.AppProperties$S3"
+    },
+    {
+      "name": "app.s3.bucket",
+      "type": "java.lang.String",
+      "sourceType": "com.coding.config.AppProperties$S3"
+    },
+    {
+      "name": "app.s3.region",
+      "type": "java.lang.String",
+      "sourceType": "com.coding.config.AppProperties$S3"
+    },
+    {
+      "name": "app.s3.secret-key",
+      "type": "java.lang.String",
+      "sourceType": "com.coding.config.AppProperties$S3"
     },
     {
       "name": "app.ui-url",

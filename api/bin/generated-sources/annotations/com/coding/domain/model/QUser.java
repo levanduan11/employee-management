@@ -30,10 +30,11 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath activationKey = createString("activationKey");
 
-    public final QUser createdBy;
+    //inherited
+    public final NumberPath<Long> createdBy = _super.createdBy;
 
     //inherited
-    public final DateTimePath<java.util.Date> createdDate = _super.createdDate;
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
     public final StringPath email = createString("email");
 
@@ -41,10 +42,11 @@ public class QUser extends EntityPathBase<User> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QUser lastModifiedBy;
+    //inherited
+    public final NumberPath<Long> lastModifiedBy = _super.lastModifiedBy;
 
     //inherited
-    public final DateTimePath<java.util.Date> lastModifiedDate = _super.lastModifiedDate;
+    public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = _super.lastModifiedDate;
 
     //inherited
     public final BooleanPath new$ = _super.new$;
@@ -77,9 +79,7 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.createdBy = inits.isInitialized("createdBy") ? new QUser(forProperty("createdBy"), inits.get("createdBy")) : null;
         this.employee = inits.isInitialized("employee") ? new QEmployee(forProperty("employee"), inits.get("employee")) : null;
-        this.lastModifiedBy = inits.isInitialized("lastModifiedBy") ? new QUser(forProperty("lastModifiedBy"), inits.get("lastModifiedBy")) : null;
     }
 
 }

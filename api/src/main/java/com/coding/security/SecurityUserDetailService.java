@@ -25,19 +25,21 @@ public class SecurityUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("Authenticating {}", username);
         return userRepository.findByUsername(username)
-                .map(this::createSecurityUser)
+                .map(SecurityUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not found."));
     }
 
-    private User createSecurityUser(com.coding.domain.model.User user) {
-        if (!user.isActivated()) {
-            throw new UserNotActivatedException("User " + user.getEmail() + " was not activated");
-        }
+    private UserDetails createSecurityUser(com.coding.domain.model.User user) {
         List<SimpleGrantedAuthority> authorities = user.getRoles()
                 .stream()
                 .map(role -> role.getName().toString())
                 .map(SimpleGrantedAuthority::new)
                 .toList();
-        return new User(user.getUsername(), user.getPassword(), authorities);
+        return User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .authorities(authorities)
+                .disabled(!user.isActivated())
+                .build();
     }
 }

@@ -1,12 +1,12 @@
 package com.coding.domain.enumeration;
 
-import com.coding.domain.model.User;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
 
 public enum ActivationUser {
     USER_NAME("username"),
+    PASSWORD("password"),
     VERIFY_URL("verifyUrl");
     private final String key;
 
@@ -18,9 +18,10 @@ public enum ActivationUser {
         return key;
     }
 
-    public static Map<String, Object> variables(String username, String verifyUrl) {
+    public static Map<String, Object> variables(String username, String password, String verifyUrl) {
         return ImmutableMap.of(
                 USER_NAME.key, username,
+                PASSWORD.key, password,
                 VERIFY_URL.key, verifyUrl
         );
     }

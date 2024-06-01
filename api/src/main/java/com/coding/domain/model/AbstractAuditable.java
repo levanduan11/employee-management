@@ -8,66 +8,58 @@ import org.springframework.lang.Nullable;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Optional;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractAuditable<U, ID extends Serializable> extends AbstractPersistable<ID> implements Serializable, Auditable<U, ID, LocalDateTime> {
-
+public abstract class AbstractAuditable<ID extends Serializable> extends AbstractPersistable<ID> implements Serializable, Auditable<Long, ID, LocalDateTime> {
     @Serial
     private static final long serialVersionUID = 141481953116476081L;
-    @ManyToOne
     @JoinColumn(name = "created_by")
-    private @Nullable U createdBy;
+    private @Nullable Long createdBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date")
-    private @Nullable Date createdDate;
+    private @Nullable LocalDateTime createdDate;
 
-    @ManyToOne
     @JoinColumn(name = "last_modified_by")
-    private @Nullable U lastModifiedBy;
+    private @Nullable Long lastModifiedBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_modified_date")
-    private @Nullable Date lastModifiedDate;
+    private @Nullable LocalDateTime lastModifiedDate;
 
-    public Optional<U> getCreatedBy() {
+    @Override
+    public void setCreatedBy(@Nullable Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Optional<Long> getCreatedBy() {
         return Optional.ofNullable(createdBy);
     }
 
     @Override
-    public void setCreatedBy(@Nullable U createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedDate(@Nullable LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Optional<LocalDateTime> getCreatedDate() {
-        return null == createdDate ? Optional.empty()
-                : Optional.of(LocalDateTime.ofInstant(createdDate.toInstant(), ZoneId.systemDefault()));
+        return Optional.ofNullable(createdDate);
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = Date.from(createdDate.atZone(ZoneId.systemDefault()).toInstant());
+    @Override
+    public void setLastModifiedBy(@Nullable Long lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Optional<U> getLastModifiedBy() {
+    public Optional<Long> getLastModifiedBy() {
         return Optional.ofNullable(lastModifiedBy);
     }
 
     @Override
-    public void setLastModifiedBy(@Nullable U lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
+    public void setLastModifiedDate(@Nullable LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Optional<LocalDateTime> getLastModifiedDate() {
-        return null == lastModifiedDate ? Optional.empty()
-                : Optional.of(LocalDateTime.ofInstant(lastModifiedDate.toInstant(), ZoneId.systemDefault()));
-    }
-
-    @Override
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = Date.from(lastModifiedDate.atZone(ZoneId.systemDefault()).toInstant());
+        return Optional.ofNullable(lastModifiedDate);
     }
 }

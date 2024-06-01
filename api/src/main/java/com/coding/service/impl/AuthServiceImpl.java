@@ -1,6 +1,7 @@
 package com.coding.service.impl;
 
 import com.coding.config.AppProperties;
+import com.coding.security.SecurityUserDetails;
 import com.coding.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,10 @@ class AuthServiceImpl implements AuthService {
         Instant expiresAt = isRememberMe
                 ? now.plus(rememberMeTokenExpiration, ChronoUnit.MILLIS)
                 : now.plus(expiration, ChronoUnit.MILLIS);
-        Map<String, String> claims = Map.of(
-                AUTHORITIES_CLAIM, authorities
+        SecurityUserDetails principal = (SecurityUserDetails) authentication.getPrincipal();
+        Map<String, Object> claims = Map.of(
+                AUTHORITIES_CLAIM, authorities,
+                "userId", principal.getId()
         );
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer(appProperties.jwt().issuer())

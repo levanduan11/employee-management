@@ -28,10 +28,11 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public final DatePath<java.time.LocalDate> birthDate = createDate("birthDate", java.time.LocalDate.class);
 
-    public final QUser createdBy;
+    //inherited
+    public final NumberPath<Long> createdBy = _super.createdBy;
 
     //inherited
-    public final DateTimePath<java.util.Date> createdDate = _super.createdDate;
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
     public final QDepartment department;
 
@@ -45,10 +46,11 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public final StringPath imageUrl = createString("imageUrl");
 
-    public final QUser lastModifiedBy;
+    //inherited
+    public final NumberPath<Long> lastModifiedBy = _super.lastModifiedBy;
 
     //inherited
-    public final DateTimePath<java.util.Date> lastModifiedDate = _super.lastModifiedDate;
+    public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = _super.lastModifiedDate;
 
     public final StringPath lastName = createString("lastName");
 
@@ -83,10 +85,8 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public QEmployee(Class<? extends Employee> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.createdBy = inits.isInitialized("createdBy") ? new QUser(forProperty("createdBy"), inits.get("createdBy")) : null;
-        this.department = inits.isInitialized("department") ? new QDepartment(forProperty("department"), inits.get("department")) : null;
-        this.lastModifiedBy = inits.isInitialized("lastModifiedBy") ? new QUser(forProperty("lastModifiedBy"), inits.get("lastModifiedBy")) : null;
-        this.position = inits.isInitialized("position") ? new QPosition(forProperty("position"), inits.get("position")) : null;
+        this.department = inits.isInitialized("department") ? new QDepartment(forProperty("department")) : null;
+        this.position = inits.isInitialized("position") ? new QPosition(forProperty("position")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user"), inits.get("user")) : null;
     }
 

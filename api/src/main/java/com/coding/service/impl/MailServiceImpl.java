@@ -36,6 +36,7 @@ public class MailServiceImpl implements MailService {
         this.messageSource = messageSource;
         this.templateEngine = templateEngine;
     }
+
     @Async
     @Override
     public void sendMail(SendMail sendMail) {
@@ -55,6 +56,7 @@ public class MailServiceImpl implements MailService {
             log.warn("Send mail failed", e);
         }
     }
+
     @Async
     public void sendMail(SendMail sendMail, String templateName, Map<String, Object> variables, String titleKey) {
         Preconditions.checkArgument(sendMail != null, "sendMail must not be null");
@@ -67,9 +69,10 @@ public class MailServiceImpl implements MailService {
         sendMail.setSubject(subject);
         sendMail(sendMail);
     }
+
     @Async
     public void sendActivationMail(SendMail sendMail, Map<String, Object> variables) {
         Preconditions.checkArgument(sendMail != null, "sendMail must not be null");
-       sendMail(sendMail, MAIL_USER_ACTIVATION, variables, MAIL_ACTIVATION_TITLE_KEY);
+        sendMail(sendMail, MAIL_USER_ACTIVATION, variables, MAIL_ACTIVATION_TITLE_KEY);
     }
 }

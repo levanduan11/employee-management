@@ -1,3 +1,4 @@
 import http from './http.service';
 import authService from './auth.service';
-export { http, authService };
+import userService from './user.service';
+export { http, authService, userService };

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -20,7 +21,7 @@ import java.util.Set;
 })
 @Entity
 @Table(name = "users")
-public class User extends AbstractAuditable<User, Long> {
+public class User extends AbstractAuditable<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,8 +41,9 @@ public class User extends AbstractAuditable<User, Long> {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}
     )
     private Set<Role> roles = new HashSet<>();
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Employee employee;
+
 
     @Override
     public Long getId() {
