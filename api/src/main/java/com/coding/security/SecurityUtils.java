@@ -1,5 +1,6 @@
 package com.coding.security;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -8,6 +9,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 public final class SecurityUtils {
@@ -17,6 +19,15 @@ public final class SecurityUtils {
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getPrincipal)
                 .map(SecurityUtils::getUsernameFromPrincipal);
+    }
+
+    @Async
+    public static CompletableFuture<Optional<String>> extractUsernameAsync() {
+        return CompletableFuture.supplyAsync(() -> Optional.ofNullable(SecurityContextHolder.getContext())
+                .map(SecurityContext::getAuthentication)
+                .filter(Authentication::isAuthenticated)
+                .map(Authentication::getPrincipal)
+                .map(SecurityUtils::getUsernameFromPrincipal));
     }
 
     private static String getUsernameFromPrincipal(Object principal) {

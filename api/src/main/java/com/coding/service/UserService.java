@@ -14,6 +14,8 @@ public interface UserService {
 
     UserProfileResponse findUserProfile();
 
+    CompletableFuture<UserProfileResponse> findUserProfileAsync();
+
     boolean updateProfile(UpdateProfileRequest request);
 
     CompletableFuture<Boolean> updatePhoto(MultipartFile file);

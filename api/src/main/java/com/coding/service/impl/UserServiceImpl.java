@@ -24,6 +24,7 @@ import com.coding.web.response.UserProfileResponse;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -168,6 +169,36 @@ public class UserServiceImpl implements UserService {
                 })
                 .findFirst()
                 .orElseThrow(DataNotFoundException::new);
+    }
+
+    @Async
+    public CompletableFuture<UserProfileResponse> findUserProfileAsync() {
+        return SecurityUtils.extractUsernameAsync()
+                .thenCompose(optionUsername -> optionUsername
+                        .map(userRepository::findOneByUsername)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .map(userProfile -> {
+                            final String imageUrl = userProfile.getImageUrl();
+                            if (imageUrl != null) {
+                                s3Service.getPreSignedUrl(imageUrl).thenAccept(preSignedUrl -> {
+                                    if (preSignedUrl == null) {
+                                        userRepository.findByUsername(userProfile.getUsername())
+                                                .ifPresent(user -> {
+                                                    Employee employee = user.getEmployee();
+                                                    if (employee != null) {
+                                                        employee.setImageUrl(null);
+                                                        userRepository.save(user);
+                                                    }
+                                                });
+                                    }
+                                    userProfile.setImageUrl(preSignedUrl);
+                                });
+                            }
+                            return CompletableFuture.completedFuture(userProfile);
+                        })
+                        .orElseThrow(DataNotFoundException::new));
+
     }
 
     @Override

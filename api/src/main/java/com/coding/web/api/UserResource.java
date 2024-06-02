@@ -1,5 +1,6 @@
 package com.coding.web.api;
 
+import com.coding.core.exception.DataNotFoundException;
 import com.coding.service.UserService;
 import com.coding.web.ApiResponse;
 import com.coding.web.request.RegisUserRequest;
@@ -8,6 +9,8 @@ import com.coding.web.response.UserProfileResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -15,15 +18,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("api/v1/users")
 public class UserResource {
     private final UserService userService;
+    private final MessageSource messageSource;
     private static final Logger log = LoggerFactory.getLogger(UserResource.class);
 
-    public UserResource(UserService userService) {
+    public UserResource(UserService userService, MessageSource messageSource) {
         this.userService = userService;
+        this.messageSource = messageSource;
     }
 
     @PostMapping
@@ -56,6 +62,44 @@ public class UserResource {
                 .data(userProfile)
                 .build();
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/profile/async")
+    public DeferredResult<ResponseEntity<ApiResponse>> getUserProfileAsync() {
+        DeferredResult<ResponseEntity<ApiResponse>> deferredResult = new DeferredResult<>();
+        userService.findUserProfileAsync()
+                .thenAccept(userProfile -> {
+                    var response = ResponseEntity.ok(ApiResponse.builder()
+                            .status(ApiResponse.Status.TRUE)
+                            .data(userProfile)
+                            .build());
+                    deferredResult.setResult(response);
+                })
+                .exceptionally(e -> {
+                    log.info("get user profile failed", e);
+                    ResponseEntity<ApiResponse> error;
+                    Throwable cause = e.getCause();
+                    if (cause instanceof DataNotFoundException) {
+                        error = ResponseEntity
+                                .status(HttpStatus.NOT_FOUND)
+                                .body(ApiResponse
+                                        .builder()
+                                        .status(ApiResponse.Status.FALSE)
+                                        .message(cause.getMessage())
+                                        .build());
+                    } else {
+                        error = ResponseEntity
+                                .internalServerError()
+                                .body(ApiResponse.builder()
+                                        .status(ApiResponse.Status.FALSE)
+                                        .message(messageSource.getMessage("error.500", null, Locale.getDefault()))
+                                        .build());
+                    }
+
+                    deferredResult.setResult(error);
+                    return null;
+                });
+        return deferredResult;
     }
 
     @PutMapping("/profile")
