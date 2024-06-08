@@ -1,8 +1,8 @@
 interface UserProfile {
   username: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  imageUrl?: string;
+  first_name?: string;
+  last_name?: string;
+  image_url?: string;
   roles: Array<string>;
 }

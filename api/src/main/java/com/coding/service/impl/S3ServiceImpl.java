@@ -23,10 +23,12 @@ import java.util.concurrent.CompletableFuture;
 public class S3ServiceImpl implements S3Service {
     private final S3AsyncClient s3AsyncClient;
     private final String bucketName;
+    private final S3Presigner s3Presigner;
 
-    public S3ServiceImpl(S3AsyncClient s3AsyncClient, AppProperties appProperties) {
+    public S3ServiceImpl(S3AsyncClient s3AsyncClient, AppProperties appProperties, S3Presigner s3Presigner) {
         this.s3AsyncClient = s3AsyncClient;
         this.bucketName = Objects.requireNonNull(Objects.requireNonNull(appProperties.s3())).bucket();
+        this.s3Presigner = s3Presigner;
     }
 
     @Override
@@ -87,7 +89,7 @@ public class S3ServiceImpl implements S3Service {
                 .thenApply(doesObjectExist -> {
                     if (!doesObjectExist)
                         return null;
-                    try (S3Presigner presigner = S3Presigner.create()) {
+                    try {
                         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                                 .bucket(bucketName)
                                 .key(path)
@@ -96,7 +98,7 @@ public class S3ServiceImpl implements S3Service {
                                 .signatureDuration(Duration.ofDays(1))
                                 .getObjectRequest(getObjectRequest)
                                 .build();
-                        PresignedGetObjectRequest presignGetObject = presigner.presignGetObject(presignRequest);
+                        PresignedGetObjectRequest presignGetObject = s3Presigner.presignGetObject(presignRequest);
                         return presignGetObject.url().toExternalForm();
                     } catch (Exception e) {
                         return null;

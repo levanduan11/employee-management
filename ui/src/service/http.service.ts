@@ -123,6 +123,15 @@ class HttpClient {
     const response = await instance.patch<R>(path, data, config);
     return response.data;
   }
+  async upload<R>(path: string, data: FormData): Promise<R> {
+    const instance = this.instance();
+    const response = await instance.post<R>(path, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
 }
 const http = new HttpClient();
 export default http;

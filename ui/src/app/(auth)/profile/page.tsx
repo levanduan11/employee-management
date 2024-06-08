@@ -11,7 +11,6 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { userService } from '@/service';
-import { LoadingSkeleton, Photo } from '@/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
@@ -30,6 +29,7 @@ import {
   TUpdateProfile,
 } from '@/schema';
 import { UpdatePhotoDialog } from './_components';
+import { Photo } from '@/components';
 
 const Profile = () => {
   const [previewImageUrl, setPreviewImageUrl] = useState<string>('');
@@ -47,11 +47,13 @@ const Profile = () => {
     mode: 'onChange',
     resolver: zodResolver(PhotoSchema),
   });
+
   const getProfile = useQuery({
     queryKey: ['get-user-profile'],
     queryFn: () => userService.getUserProfile(),
     retry: false,
   });
+
   const updateProfile = useMutation({
     mutationKey: ['update-profile'],
     mutationFn: (data: TUpdateProfile) => userService.updateProfile(data),
@@ -64,6 +66,19 @@ const Profile = () => {
       }
     },
   });
+
+  const updatePhoto = useMutation({
+    mutationKey: ['update-profile-photo'],
+    mutationFn: (data: FormData) => userService.updatePhoto(data),
+    onSuccess: () => {
+      getProfile.refetch();
+      cleanImage();
+    },
+    onError: () => {
+      cleanImage();
+    },
+  });
+
   useEffect(() => {
     if (getProfile.data?.data) {
       form.reset(getProfile.data.data);
@@ -86,29 +101,31 @@ const Profile = () => {
       setPreviewImageUrl('');
     }
   }, [imageFile]);
-  console.log({ imageFile });
 
   const handleUpdatePhotoClose = () => {
-    setPreviewImageUrl('');
-    updatePhotoForm.reset({ image_url: undefined });
+    cleanImage();
     setIsOpenModalUpdatePhoto(false);
   };
   const handleUpdatePhoto = async () => {
     const isValid = await updatePhotoForm.trigger();
     if (!isValid) return;
+    const formData = new FormData();
+    formData.append('file', imageFile[0]);
+    updatePhoto.mutate(formData);
     setIsOpenModalUpdatePhoto(false);
   };
+  const cleanImage = () => {
+    setPreviewImageUrl('');
+    updatePhotoForm.reset({ image_url: undefined });
+  };
 
-  if (getProfile.isLoading || getProfile.isFetching) {
-    return <LoadingSkeleton />;
-  }
   return (
     <div>
       <div className="grid grid-cols-12 gap-3">
         <div className="col-span-3">
           <Card className="p-4">
             <CardContent className="flex items-center justify-center">
-              <Photo src={getProfile.data?.data?.imageUrl} />
+              <Photo src={getProfile.data?.data?.image_url} />
             </CardContent>
             <CardFooter className="justify-center">
               <UpdatePhotoDialog

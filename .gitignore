@@ -9,3 +9,6 @@ api/src/main/resources/certs
 api/src/main/resources/application-dev.yml
 api/bin
 api/build
+.idea
+.vscode
+

@@ -22,5 +22,21 @@ export const PhotoSchema = z.object({
     }),
 });
 
+export const UpdatePasswordSchema = z
+  .object({
+    old_password: z.string().trim().min(1, 'Old password is required'),
+    new_password: z.string().trim().min(1, 'New password is required'),
+    confirm_password: z.string().trim().min(1, 'Confirm password is required'),
+  })
+  .refine((data) => data.new_password === data.confirm_password, {
+    message: 'Password does not match',
+    path: ['confirm_password'],
+  })
+  .refine((data) => data.old_password !== data.new_password, {
+    message: 'New password cannot be the same as old password',
+    path: ['new_password'],
+  });
+
 export type TUpdateProfile = z.infer<typeof ProfileSchema>;
 export type TUpdatePhoto = z.infer<typeof PhotoSchema>;
+export type TUpdatePassword = z.infer<typeof UpdatePasswordSchema>;

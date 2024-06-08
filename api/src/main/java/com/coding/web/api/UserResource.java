@@ -4,6 +4,7 @@ import com.coding.core.exception.DataNotFoundException;
 import com.coding.service.UserService;
 import com.coding.web.ApiResponse;
 import com.coding.web.request.RegisUserRequest;
+import com.coding.web.request.UpdatePasswordRequest;
 import com.coding.web.request.UpdateProfileRequest;
 import com.coding.web.response.UserProfileResponse;
 import jakarta.validation.Valid;
@@ -112,7 +113,7 @@ public class UserResource {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/profile/photo")
+    @PostMapping("/profile/photo")
     public DeferredResult<ResponseEntity<ApiResponse>> updatePhoto(MultipartFile file) {
         DeferredResult<ResponseEntity<ApiResponse>> deferredResult = new DeferredResult<>();
         userService.updatePhoto(file)
@@ -134,5 +135,15 @@ public class UserResource {
                     return null;
                 });
         return deferredResult;
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<ApiResponse> updatePassword(@RequestBody @Valid final UpdatePasswordRequest request) {
+        boolean result = userService.updatePassword(request.getOldPassword(), request.getNewPassword());
+        ApiResponse response = ApiResponse.builder()
+                .status(ApiResponse.Status.TRUE)
+                .data(result)
+                .build();
+        return ResponseEntity.ok(response);
     }
 }

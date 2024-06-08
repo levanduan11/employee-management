@@ -11,6 +11,9 @@ export const API_ERROR_MESSAGE = {
   UPDATE_PROFILE_PENDING: 'Updating profile...',
   UPDATE_PROFILE_SUCCESS: 'Profile updated successfully',
   UPDATE_PROFILE_FAIL: 'Profile update failed',
+  UPDATE_PASSWORD_PENDING: 'Updating Password...',
+  UPDATE_PASSWORD_SUCCESS: 'Password updated successfully',
+  UPDATE_PASSWORD_FAIL: 'Password update failed',
 };
 
 export const {
@@ -26,4 +29,7 @@ export const {
   UPDATE_PROFILE_PENDING,
   UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE_FAIL,
+  UPDATE_PASSWORD_PENDING,
+  UPDATE_PASSWORD_SUCCESS,
+  UPDATE_PASSWORD_FAIL,
 } = API_ERROR_MESSAGE;

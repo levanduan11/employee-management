@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,9 +16,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import static com.coding.core.constant.MessageKeyConstant.*;
+import static com.coding.core.util.StringUtilKt.camelCaseToSnakeCase;
 import static java.util.stream.Collectors.*;
 import static org.springframework.http.HttpStatus.*;
 
@@ -95,7 +94,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .getFieldErrors()
                 .stream()
                 .collect(groupingBy(
-                        FieldError::getField,
+                        fieldError -> camelCaseToSnakeCase(fieldError.getField()),
                         mapping(DefaultMessageSourceResolvable::getDefaultMessage, toList())
                 ));
 

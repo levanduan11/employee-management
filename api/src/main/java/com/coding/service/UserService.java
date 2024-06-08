@@ -19,4 +19,5 @@ public interface UserService {
     boolean updateProfile(UpdateProfileRequest request);
 
     CompletableFuture<Boolean> updatePhoto(MultipartFile file);
+    boolean updatePassword(String oldPassword, String newPassword);
 }

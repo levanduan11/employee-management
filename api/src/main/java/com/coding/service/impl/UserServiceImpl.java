@@ -1,10 +1,8 @@
 package com.coding.service.impl;
 
 import com.coding.config.AppProperties;
-import com.coding.core.exception.DataNotFoundException;
-import com.coding.core.exception.EmailAlreadyUsedException;
-import com.coding.core.exception.TimeVerificationOutException;
-import com.coding.core.exception.UsernameAlreadyUsedException;
+import com.coding.core.constant.MessageKeyConstant;
+import com.coding.core.exception.*;
 import com.coding.core.util.FileUtils;
 import com.coding.core.util.RandomUtil;
 import com.coding.domain.SendMail;
@@ -24,6 +22,7 @@ import com.coding.web.response.UserProfileResponse;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,6 +46,7 @@ public class UserServiceImpl implements UserService {
     private final AppProperties appProperties;
     private final S3Service s3Service;
     private static final String USER_UPLOAD_PATH = "users";
+    private final MessageSource messageSource;
 
     public UserServiceImpl(
             final UserRepository userRepository,
@@ -54,13 +54,14 @@ public class UserServiceImpl implements UserService {
             final RoleRepository roleRepository,
             final MailService mailService,
             final AppProperties appProperties,
-            S3Service s3Service) {
+            S3Service s3Service, MessageSource messageSource) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.mailService = mailService;
         this.appProperties = appProperties;
         this.s3Service = s3Service;
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -284,4 +285,28 @@ public class UserServiceImpl implements UserService {
         return employee == null ? new Employee() : employee;
     }
 
+    @Override
+    public boolean updatePassword(String oldPassword, String newPassword) {
+        if (Objects.equals(oldPassword, newPassword)) {
+            return false;
+        } else {
+            return SecurityUtils.extractUsername()
+                    .map(userRepository::findByUsername)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .map(user -> updatePassword(user, oldPassword, newPassword))
+                    .orElseThrow(DataNotFoundException::new);
+        }
+    }
+
+    private boolean updatePassword(final User user, final String oldPassword, final String newPassword) {
+        boolean isValidPassword = passwordEncoder.matches(oldPassword, user.getPassword());
+        if (!isValidPassword) {
+            String errorMessage = messageSource.getMessage(MessageKeyConstant.PASSWORD_INCORRECT, null, Locale.getDefault());
+            throw new InvalidPasswordException(errorMessage);
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return true;
+    }
 }

@@ -42,7 +42,4 @@ public final class FileUtils {
         return format + "_" + fileName;
     }
 
-    public static void main(String[] args) {
-        System.out.println(generateFileNameWithDateTime("test.png"));
-    }
 }
