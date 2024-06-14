@@ -2,17 +2,15 @@ package com.coding.web.response;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class UserResponse implements Serializable {
     private final String username;
     private final String email;
     private final String imageUrl;
     private final Boolean activated;
-    private final Date createdDate;
+    private final LocalDateTime createdDate;
 
-    public UserResponse(String username, String email, String imageUrl, Boolean activated, Date createdDate) {
+    public UserResponse(String username, String email, String imageUrl, Boolean activated, LocalDateTime createdDate) {
         this.username = username;
         this.email = email;
         this.imageUrl = imageUrl;
@@ -25,7 +23,7 @@ public class UserResponse implements Serializable {
     }
 
     public LocalDateTime getCreatedDate() {
-        return LocalDateTime.ofInstant(createdDate.toInstant(), ZoneId.systemDefault());
+        return createdDate;
     }
 
     public String getEmail() {

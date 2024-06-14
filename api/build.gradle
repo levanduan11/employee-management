@@ -44,7 +44,7 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:${querydsl_version}:jakarta"
 
     annotationProcessor "jakarta.persistence:jakarta.persistence-api:${persistence_version}"
-
+    testImplementation 'net.datafaker:datafaker:2.2.2'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
