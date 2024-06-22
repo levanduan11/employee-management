@@ -3,7 +3,7 @@ server:
 spring:
   profiles:
     active:
-      - ${ACTIVE_PROFILE:dev}
+      - ${ACTIVE_PROFILE:test}
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:postgres}?currentSchema=${DB_SCHEMA:employee_db}
     username: ${DB_USERNAME:postgres}

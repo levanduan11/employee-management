@@ -11,4 +11,4 @@ api/bin
 api/build
 .idea
 .vscode
-
+.env

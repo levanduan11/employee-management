@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC2164
-
+set -e
 cd api/src/main/resources
 
 rm -R keys
